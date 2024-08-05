@@ -53,27 +53,31 @@
 
     touchArea.addEventListener('touchstart', (e) => {
         touchPoints = 0;
-        startTime = new Date().getTime();
+        startTime = performance.now(); // Use performance.now() for higher resolution
     });
 
     touchArea.addEventListener('touchmove', (e) => {
         touchPoints++;
-        let currentTime = new Date().getTime();
-        let elapsedTime = (currentTime - startTime) / 1000;
-        let samplingRate = (touchPoints / elapsedTime).toFixed(2);
+        let currentTime = performance.now();
+        let elapsedTime = (currentTime - startTime) / 1000; // Convert milliseconds to seconds
 
-        currentRateDisplay.innerText = samplingRate;
+        if (elapsedTime > 0) {
+            let samplingRate = (touchPoints / elapsedTime).toFixed(2);
+            currentRateDisplay.innerText = samplingRate;
 
-        if (parseFloat(samplingRate) > parseFloat(maxSamplingRate)) {
-            maxSamplingRate = samplingRate;
-            maxRateDisplay.innerText = maxSamplingRate;
+            if (parseFloat(samplingRate) > maxSamplingRate) {
+                maxSamplingRate = parseFloat(samplingRate);
+                maxRateDisplay.innerText = maxSamplingRate.toFixed(2);
+            }
         }
     });
 
     touchArea.addEventListener('touchend', (e) => {
-        touchPoints = 0;
-        startTime = 0;
+        // Optional: Reset after touch ends
+        // touchPoints = 0;
+        // startTime = 0;
     });
 </script>
 
 </body>
+</html>

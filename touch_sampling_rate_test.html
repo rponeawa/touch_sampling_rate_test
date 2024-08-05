@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touch Sampling Rate Test</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        #touchArea {
+            width: 80%;
+            height: 80%;
+            border: 2px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+        #rateDisplay {
+            position: absolute;
+            bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="touchArea">
+    <p>Swipe here to test touch sampling rate</p>
+    <div id="rateDisplay">
+        <div>Current Sampling Rate: <span id="currentRate">0</span> points/sec</div>
+        <div>Max Sampling Rate: <span id="maxRate">0</span> points/sec</div>
+    </div>
+</div>
+
+<script>
+    let touchArea = document.getElementById('touchArea');
+    let currentRateDisplay = document.getElementById('currentRate');
+    let maxRateDisplay = document.getElementById('maxRate');
+    let touchPoints = 0;
+    let startTime = 0;
+    let maxSamplingRate = 0;
+
+    touchArea.addEventListener('touchstart', (e) => {
+        touchPoints = 0;
+        startTime = new Date().getTime();
+    });
+
+    touchArea.addEventListener('touchmove', (e) => {
+        touchPoints++;
+        let currentTime = new Date().getTime();
+        let elapsedTime = (currentTime - startTime) / 1000;
+        let samplingRate = (touchPoints / elapsedTime).toFixed(2);
+
+        currentRateDisplay.innerText = samplingRate;
+
+        if (parseFloat(samplingRate) > parseFloat(maxSamplingRate)) {
+            maxSamplingRate = samplingRate;
+            maxRateDisplay.innerText = maxSamplingRate;
+        }
+    });
+
+    touchArea.addEventListener('touchend', (e) => {
+        touchPoints = 0;
+        startTime = 0;
+    });
+</script>
+
+</body>
